@@ -1,0 +1,45 @@
+.column-maintenance_status_column {
+    width: 20%;
+    position: relative;
+}
+
+.maintenance-status-header {
+    display: inline-block;
+}
+
+.maintenance-status-reload {
+    position: absolute;
+    top: 50%;
+    right: 5px;
+    transform: translateY(-50%);
+    color: #999;
+}
+
+.status-bar {
+    height: 8px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+}
+
+.status-bar.green {
+    background-color: #00FF00;
+}
+
+.status-bar.orange {
+    background-color: #f89406;
+}
+
+.status-bar.red {
+    background-color: #ee5f5b;
+}
+
+.status-bar.skyblue {
+    background-color: #87ceeb;
+}
+
+.clear-cache-link a .dashicons {
+    color: #767676 !important;
+}
+
+
+
