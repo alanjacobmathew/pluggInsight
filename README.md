@@ -1,4 +1,4 @@
-## PluggInsight 
+## PluggInsight - Maintenance Status
 
 The PluggInsight - Maintenance Status plugin enhances your WordPress plugin management experience by providing convenient access to maintenance details for each installed plugin. With this plugin, you can quickly check the maintenance status of your plugins without even leaving the plugin page.
 
