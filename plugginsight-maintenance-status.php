@@ -2,10 +2,10 @@
 /**
  * Plugin Name: PluggInsight - Maintenance Status
  * Description: Easily access maintenance details for each plugin directly on the WordPress plugin page.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Alan Jacob Mathew
  * Author URI: https://profiles.wordpress.org/alanjacobmathew/
- * Tested up to: 6.3
+ * Tested up to: 6.4.2
  * Text Domain: plugginsight-maintenance-status
  * Domain Path: /languages/
  */
@@ -155,9 +155,9 @@ function add_column_to_plugins_page_pmswp($columns) {
 
 
 $major_releases_pmswp = array(
-    '5.0', '5.1', '5.2', '5.3', '5.4', '5.5', '5.6', '5.7', '5.8', '5.9', '6.0', '6.1', '6.2'
+    '5.0', '5.1', '5.2', '5.3', '5.4', '5.5', '5.6', '5.7', '5.8', '5.9', '6.0', '6.1', '6.2','6.3','6.4'
 );
-$upcoming_major_release = '6.3';
+$upcoming_major_release = '6.5';
 
 function get_latest_major_wp_release_pmswp() {
     global $major_releases_pmswp;
