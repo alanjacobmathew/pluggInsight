@@ -5,7 +5,9 @@ The PluggInsight - Maintenance Status for WP plugins enhances your WordPress plu
 Further it helps the admins make informed decision before updating the site to the latest WordPress version. 
 
 ![image](https://github.com/alanjacobmathew/pluggInsight-maintenance-status/assets/33965848/042eba31-19d7-4951-a4cb-b1d7d06b8acc)
-`Note: The plugin wasn't approved for the repo due to some code sanitation and validation issues that I haven't had time to address yet. So, if you're using it, please only use it on your development site.` 
+> [!WARNING]
+> The plugin wasn't approved for the repo due to some code sanitation and validation issues that I haven't had time to address yet. So, if you're using it, please only use it on your development site.
+
 
 
 
@@ -23,7 +25,8 @@ Further it helps the admins make informed decision before updating the site to t
 - **No ads and No Upsells**
 - **Works on local Test sites** too. (Tested on [localwp](https://localwp.com).)
 
-### Note 
+> [!NOTE]
+>  From the author
 - Works only for those plugins hosted on the Official WordPress Plugin Repository.
 - Data is sourced from official WordPress Plugin Repository. The plugin author has not individually verified the accuracy or validity of each plugin data.
 - The plugin is designed keeping mind of those plugins that provides minimal functionality, that need not be updated but tested up to the latest version.
