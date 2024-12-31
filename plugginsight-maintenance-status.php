@@ -2,61 +2,52 @@
 /**
  * Plugin Name: PluggInsight - Maintenance Status
  * Description: Easily access maintenance details for each plugin directly on the WordPress plugin page.
- * Version: 1.0.1
+ * Version: 1.0.0
  * Author: Alan Jacob Mathew
  * Author URI: https://profiles.wordpress.org/alanjacobmathew/
- * Tested up to: 6.4.2
+ * Tested up to: 6.7.1
  * Text Domain: plugginsight-maintenance-status
  * Domain Path: /languages/
+ * License: GPLv3 or later
  */
 
-register_activation_hook(__FILE__, 'plugin_maintenance_status_activate_pmswp');
-register_deactivation_hook(__FILE__, 'plugin_maintenance_status_deactivate_pmswp');
+if ( ! defined( 'ABSPATH' ) ) exit;
+register_activation_hook(__FILE__, 'plugginsight_maintenance_status_activate_pmswp');
+register_deactivation_hook(__FILE__, 'plugginsight_maintenance_status_deactivate_pmswp');
 
-function plugin_maintenance_status_activate_pmswp() {
-    
-}
-
-function plugin_maintenance_status_deactivate_pmswp() {
-    // Remove the column from the plugins page
-    add_filter('manage_plugins_columns', 'remove_column_from_plugins_page_pmswp');
-
-    // Remove the plugin contents
-    delete_option('maintenance_status_column_contents');
-
-    // Clear transient cache
-    global $major_releases_pmswp;
-    foreach ($major_releases_pmswp as $release) {
-        delete_transient('plugin_maintenance_status_' . $release);
-    }
-    remove_submenu_page('plugins.php', 'plugginsight-maintenance-status');
-    
-    // Remove CSS file
-   wp_dequeue_style('plugginsight-maintenance-status');
-   wp_deregister_style('plugginsight-maintenance-status');
-
+function plugginsight_maintenance_status_activate_pmswp() {
    
-    
-    // Remove language files
-    $language_folder = plugin_dir_path(__FILE__) . 'languages/';
-    if (is_dir($language_folder)) {
-        $language_files = scandir($language_folder);
-        foreach ($language_files as $file) {
-            if (is_file($language_folder . $file)) {
-                unlink($language_folder . $file);
-            }
-        }
-        rmdir($language_folder);
-    }
-    
-    
+    add_filter('manage_plugins_columns', 'plugginsight_add_column_to_plugins_page_pmswp');
 }
 
 
-// Add a submenu page under the Plugins menu
-add_action('admin_menu', 'plugin_maintenance_status_add_submenu_page_pmswp');
+function plugginsight_maintenance_status_deactivate_pmswp() {
+    /* Remove the column from the plugins page */
+    remove_filter('manage_plugins_columns', 'plugginsight_add_column_to_plugins_page_pmswp');
 
-function plugin_maintenance_status_add_submenu_page_pmswp() {
+
+    /* Clear transient cache. */
+    global $plugginsight_major_releases;
+    foreach ($plugginsight_major_releases as $release) {
+        delete_transient('plugginsight_maintenance_status_' . $release);
+    }
+
+     remove_submenu_page('plugins.php', 'plugginsight-maintenance-status');
+    
+    /* Remove CSS file */
+    wp_dequeue_style('plugginsight-maintenance-status');
+    wp_deregister_style('plugginsight-maintenance-status');
+	
+	/* Remove JS */
+	wp_dequeue_script('plugginsight-maintenance-status');
+	wp_deregister_script('plugginsight-maintenance-status');
+
+}
+
+/* Add a submenu page under the Plugins menu */
+add_action('admin_menu', 'plugginsight_maintenance_status_add_submenu_page_pmswp');
+
+function plugginsight_maintenance_status_add_submenu_page_pmswp() {
     add_plugins_page(
         __('Maintenance Status', 'plugginsight-maintenance-status'),
         __('Maintenance Status', 'plugginsight-maintenance-status'),
@@ -67,62 +58,71 @@ function plugin_maintenance_status_add_submenu_page_pmswp() {
 }
 
 
-// Render the plugin page content
+/* Render the plugin page content */
 function plugginsight_maintenance_status_render_page_pmswp() {
-    // Check if the user has access
+    /* Check if the user has access */
     if (!current_user_can('manage_options')) {
         return;
     }
 
     echo '<div class="wrap">';
-    echo '<h1><span class="dashicons dashicons-plugins-checked"></span> ' . __('Maintenance Status Settings', 'plugginsight-maintenance-status') . '</h1>';
-    echo '<p>' . __('Manage Maintenance Status Cache', 'plugginsight-maintenance-status') . '</p>';
-    echo '<p><em>' . __('Disclaimer:', 'plugginsight-maintenance-status') . ' ' . __('The plugin and its developer do not independently verify the accuracy or validity of each plugin\'s data. The data displayed is obtained from the WP plugin repository, where individual plugin authors have tested and reported that their plugins are compatible with the latest WordPress versions. All the displayed logic in this plugin is based on that data.', 'plugginsight-maintenance-status') . '</em></p>';
-    echo '<p><strong><em>' . __('The below process will depend on the number of plugins you have installed. More plugins installed, more time it will take to reload this cache.', 'plugginsight-maintenance-status') . '</em></strong></p>';
+    echo '<h1><span class="dashicons dashicons-plugins-checked"></span> ' . esc_html( __('Maintenance Status Settings', 'plugginsight-maintenance-status') ) . '</h1>';
+    echo '<p>' . esc_html( __('Manage Maintenance Status Cache', 'plugginsight-maintenance-status') ) . '</p>';
+    echo '<p><em>' . esc_html( __('Disclaimer:', 'plugginsight-maintenance-status') ). ' ' . esc_html( __('The plugin and its developer do not independently verify the accuracy or validity of each plugin\'s data. The data displayed is obtained from the WP plugin repository, where individual plugin authors have tested and reported that their plugins are compatible with the latest WordPress versions. All the displayed logic in this plugin is based on that data.', 'plugginsight-maintenance-status') ). '</em></p>';
+    echo '<p><strong><em>' . esc_html( __('The below process will depend on the number of plugins you have installed. More plugins installed, more time it will take to reload this cache.', 'plugginsight-maintenance-status') ). '</em></strong></p>';
 
-    // Add Clear Cache button
+    /* Add Clear Cache button */
     echo '<form method="post">';
-    echo '<input type="hidden" name="plugin_maintenance_status_clear_cache_nonce" value="' . wp_create_nonce('plugin_maintenance_status_clear_cache_nonce') . '">';
-    echo '<input type="submit" name="plugin_maintenance_status_clear_cache" class="button" value="' . __('Clear Status Cache', 'plugginsight-maintenance-status') . '">';
+	echo '<input type="hidden" name="plugginsight_maintenance_status_clear_cache_nonce" value="' . esc_attr(wp_create_nonce('plugginsight_maintenance_status_clear_cache_nonce')) . '">';
+
+    echo '<input type="submit" name="plugginsight_maintenance_status_clear_cache" class="button" value="' . esc_html( __('Clear Status Cache', 'plugginsight-maintenance-status') ). '">';
     echo '</form>';
 
-    // Handle cache clearing and refreshing
-    if (isset($_POST['plugin_maintenance_status_clear_cache'])) {
-        if (isset($_POST['plugin_maintenance_status_clear_cache_nonce']) && wp_verify_nonce($_POST['plugin_maintenance_status_clear_cache_nonce'], 'plugin_maintenance_status_clear_cache_nonce')) {
+	
+    /* Handle cache clearing and refreshing */
+if (isset($_POST['plugginsight_maintenance_status_clear_cache'])) {
+    /* Unsure if the nonce is unslashed and sanitized */
+    $nonce = isset($_POST['plugginsight_maintenance_status_clear_cache_nonce']) 
+        ? sanitize_text_field(wp_unslash($_POST['plugginsight_maintenance_status_clear_cache_nonce'])) 
+        : '';
 
-            // Clear transients cache
-            global $major_releases_pmswp;
-            foreach ($major_releases_pmswp as $release) {
-                delete_transient('plugin_maintenance_status_' . $release);
-            }
+    if ($nonce && wp_verify_nonce($nonce, 'plugginsight_maintenance_status_clear_cache_nonce')) {
 
-            // Refresh cache by making new API requests
-            foreach ($major_releases_pmswp as $release) {
-                $plugin_data = plugin_maintenance_status_get_plugin_data_pmswp($release);
-                set_transient('plugin_maintenance_status_' . $release, $plugin_data, 86400);
-            }
-
-            // Display success message
-            echo '<div class="notice notice-success"><p>' . __('Cache cleared and refreshed successfully.', 'plugginsight-maintenance-status') . '</p></div>';
-        } else {
-            // Display error message for invalid nonce
-            echo '<div class="notice notice-error"><p>' . __('Invalid security token. Cache clearing and refreshing failed.', 'plugginsight-maintenance-status') . '</p></div>';
-        }
+    /* Clear transients cache */
+    global $plugginsight_major_releases; 
+    foreach ($plugginsight_major_releases as $release) {
+        delete_transient('plugginsight_maintenance_status_' . $release);
     }
 
-    echo '</div>'; // End wrap container
+    /* Refresh cache by making new API requests */
+    foreach ($plugginsight_major_releases as $release) {
+        $plugginsight_plugin_data = plugginsight_maintenance_status_get_plugin_data_pmswp($release); 
+        set_transient('plugginsight_maintenance_status_' . $release, $plugginsight_plugin_data, 86400);
+    }
+
+    /* Display success message */
+    echo '<div class="notice notice-success"><p>' . esc_html(__('Cache cleared and refreshed successfully.', 'plugginsight-maintenance-status')) . '</p></div>';
+} else {
+    /* Display error message for invalid nonce */
+    echo '<div class="notice notice-error"><p>' . esc_html(__('Invalid security token. Cache clearing and refreshing failed.', 'plugginsight-maintenance-status')) . '</p></div>';
+}
+
+}
+
+echo '</div>'; // End wrap container
+
 }
 
 
 
 
 
-// Add a link to the plugin page in the plugin.php page
-add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'plugin_maintenance_status_add_plugin_page_link_pmswp');
+/* Add a link to the plugin page in the plugin.php page */
+add_filter('plugin_action_links_' . plugin_basename(__FILE__), 'plugginsight_maintenance_status_add_plugin_page_link_pmswp');
 
-function plugin_maintenance_status_add_plugin_page_link_pmswp($links) {
+function plugginsight_maintenance_status_add_plugin_page_link_pmswp($links) {
     $plugin_page_link = admin_url('plugins.php?page=plugginsight-maintenance-status');
-    $new_link = '<a href="' . $plugin_page_link . '">' . __('Settings', 'plugginsight-maintenance-status') . '</a>';
+    $new_link = '<a href="' . $plugin_page_link . '">' . esc_html( __('Settings', 'plugginsight-maintenance-status') ). '</a>';
     array_push($links, $new_link);
     return $links;
 }
@@ -130,8 +130,8 @@ function plugin_maintenance_status_add_plugin_page_link_pmswp($links) {
 
 
 
-add_filter('manage_plugins_columns', 'add_column_to_plugins_page_pmswp');
-function add_column_to_plugins_page_pmswp($columns) {
+add_filter('manage_plugins_columns', 'plugginsight_add_column_to_plugins_page_pmswp');
+function plugginsight_add_column_to_plugins_page_pmswp($columns) {
     $new_columns = array();
     $position = 0;
     foreach ($columns as $key => $value) {
@@ -141,9 +141,9 @@ function add_column_to_plugins_page_pmswp($columns) {
             $new_columns[$key] = $value;
             if ($position === 3) {
                 $new_columns['maintenance_status_column'] = sprintf(
-                    __('Maintenance Status', 'plugginsight-maintenance-status') . ' <a href="%s" class="clear-cache-link" title="%s"><span class="dashicons dashicons-plugins-checked"></span></a>',
+                    esc_html( __('Maintenance Status', 'plugginsight-maintenance-status') ). ' <a href="%s" class="plugginsight_clear-cache-link" title="%s"><span class="dashicons dashicons-plugins-checked"></span><a>',
                     esc_url(admin_url('admin.php?page=plugginsight-maintenance-status')),
-                    __('Update Status Cache', 'plugginsight-maintenance-status')
+                    esc_html( __('Update Status Cache', 'plugginsight-maintenance-status') )
                 );
             }
             $position++;
@@ -154,92 +154,120 @@ function add_column_to_plugins_page_pmswp($columns) {
 
 
 
-$major_releases_pmswp = array(
-    '5.0', '5.1', '5.2', '5.3', '5.4', '5.5', '5.6', '5.7', '5.8', '5.9', '6.0', '6.1', '6.2','6.3','6.4'
+$plugginsight_major_releases = array(
+    '5.0', '5.1', '5.2', '5.3', '5.4', '5.5', '5.6', '5.7', '5.8', '5.9', '6.0', '6.1', '6.2' , '6.3','6.4','6.5','6.6','6.7'
 );
-$upcoming_major_release = '6.5';
+$plugginsight_upcoming_major_release = '6.8';
 
-function get_latest_major_wp_release_pmswp() {
-    global $major_releases_pmswp;
-    return end($major_releases_pmswp);
+function plugginsight_get_latest_major_wp_release_pmswp() {
+    global $plugginsight_major_releases;
+    return end($plugginsight_major_releases);
 }
-function generate_status_bar_pmswp($tested_up_to) {
-    global $major_releases_pmswp,$upcoming_major_release;
 
-    $tested_version_parts = explode('.', $tested_up_to);
-    $tested_major_release = $tested_version_parts[0] . '.' . $tested_version_parts[1];
-	
-	if ($tested_up_to === $upcoming_major_release) {
-        return '<div class="status-bar skyblue"></div>';
+function plugginsight_generate_status_bar_pmswp($tested_up_to) {
+    global $plugginsight_major_releases, $plugginsight_upcoming_major_release;
+
+    $plugginsight_tested_version_parts = explode('.', $tested_up_to);
+    $plugginsight_tested_major_release = $plugginsight_tested_version_parts[0] . '.' . $plugginsight_tested_version_parts[1];
+    
+    if ($tested_up_to === $plugginsight_upcoming_major_release) {
+        return '<div class="plugginsight_status-bar skyblue"></div>';
     }
 
-    $latest_major_release = get_latest_major_wp_release_pmswp();
-    $latest_major_release_index = array_search($latest_major_release, $major_releases_pmswp);
-    $tested_major_release_index = array_search($tested_major_release, $major_releases_pmswp);
+    $plugginsight_latest_major_release = plugginsight_get_latest_major_wp_release_pmswp();
+    $plugginsight_latest_major_release_index = array_search($plugginsight_latest_major_release, $plugginsight_major_releases);
+    $plugginsight_tested_major_release_index = array_search($plugginsight_tested_major_release, $plugginsight_major_releases);
 
-    $difference = $latest_major_release_index - $tested_major_release_index;
+    $plugginsight_difference = $plugginsight_latest_major_release_index - $plugginsight_tested_major_release_index;
 
-    $status_bar_color = '';
+    $plugginsight_status_bar_color = '';
 
-    if ($difference < 1) {
-        $status_bar_color = 'green';
-    } elseif ($difference >= 1 && $difference < 3) {
-        $status_bar_color = 'orange';
+    if ($plugginsight_difference < 1) {
+        $plugginsight_status_bar_color = 'green';
+    } elseif ($plugginsight_difference >= 1 && $plugginsight_difference < 3) {
+        $plugginsight_status_bar_color = 'orange';
     } else {
-        $status_bar_color = 'red';
+        $plugginsight_status_bar_color = 'red';
     }
 
-    return '<div class="status-bar ' . $status_bar_color . '"></div>';
+    return '<div class="plugginsight_status-bar ' . esc_html($plugginsight_status_bar_color) . '"></div>';
 }
 
 
-add_action('admin_enqueue_scripts', 'plugin_maintenance_status_enqueue_scripts_pmswp');
 
-function plugin_maintenance_status_enqueue_scripts_pmswp() {
-    // Enqueue CSS file
-    wp_enqueue_style('plugginsight-maintenance-status', plugins_url('plugginsight-maintenance-status.css', __FILE__), array(), filemtime(plugin_dir_path(__FILE__) . 'plugginsight-maintenance-status.css'));
+add_action('admin_enqueue_scripts', 'plugginsight_maintenance_status_enqueue_scripts_pmswp');
+function plugginsight_maintenance_status_enqueue_scripts_pmswp() {
+    /* Register CSS file */
+    wp_register_style(
+        'plugginsight-maintenance-status', 
+        plugins_url('plugginsight-maintenance-status.css', __FILE__), 
+        array(), 
+        filemtime(plugin_dir_path(__FILE__) . 'plugginsight-maintenance-status.css')
+    );
+    wp_enqueue_style('plugginsight-maintenance-status');
 
-    // Enqueue JS file
-    wp_enqueue_script('plugginsight-maintenance-status', plugins_url('plugginsight-maintenance-status.js', __FILE__), array('jquery'), filemtime(plugin_dir_path(__FILE__) . 'plugginsight-maintenance-status.js'));
+    /* Register JS file */
+    wp_register_script(
+        'plugginsight-maintenance-status', 
+        plugins_url('plugginsight-maintenance-status.js', __FILE__), 
+        array('jquery'), 
+        filemtime(plugin_dir_path(__FILE__) . 'plugginsight-maintenance-status.js'), 
+        true // Load in footer
+    );
+    wp_enqueue_script('plugginsight-maintenance-status');
 }
 
 
-function plugin_maintenance_status_format_last_updated_pmswp($last_updated) {
+
+
+function plugginsight_maintenance_status_format_last_updated_pmswp($last_updated) {
     $now = time();
-    $updated_timestamp = strtotime($last_updated);
+    $lastupdated = sanitize_text_field($last_updated); // Sanitize the input
+	$updated_timestamp = strtotime($lastupdated); // Convert to timestamp
+	if ($updated_timestamp === false) {
+    return esc_html('Data Unavailable');
+	}
     $diff = $now - $updated_timestamp;
     $years = floor($diff / (365 * 24 * 60 * 60));
     $months = floor($diff / (30 * 24 * 60 * 60));
     $days = floor($diff / (24 * 60 * 60));
 
     if ($years > 0) {
-        return $years . ' year' . ($years > 1 ? 's' : '') . ' ago';
+        return esc_html($years . ' year' . ($years > 1 ? 's' :  '') . ' ago');
     } elseif ($months > 0) {
-        return $months . ' month' . ($months > 1 ? 's' : '') . ' ago';
-    } elseif ($days > 0) {
-        return $days . ' day' . ($days > 1 ? 's' : '') . ' ago';
+    
+        return esc_html( $months . ' month' . ($months > 1 ? 's' : '') . ' ago');
+    } else if ($days > 0) {
+        return esc_html($days . ' day' . ($days > 1 ? 's' : '') . ' ago');
     } else {
-        return 'Today';
+        return esc_html('Today');
     }
 }
-add_action('manage_plugins_custom_column', 'populate_maintenance_status_column_pmswp', 10, 3);
+add_action('manage_plugins_custom_column', 'plugginsight_populate_maintenance_status_column_pmswp', 10, 3);
 
-function populate_maintenance_status_column_pmswp($column, $plugin_file, $plugin_data) {
+function plugginsight_populate_maintenance_status_column_pmswp($column, $plugin_file, $plugin_data) {
     if ($column === 'maintenance_status_column') {
         $plugin_slug = basename(dirname($plugin_file));
-        $plugin_data = plugin_maintenance_status_get_plugin_data_pmswp($plugin_slug); // Updated function name
+        $plugin_data = plugginsight_maintenance_status_get_plugin_data_pmswp($plugin_slug); 
 		
         if ($plugin_data !== null) {
-            // Display additional information from the plugin repository API
-            echo '<strong>' . __('Latest Version:', 'plugginsight-maintenance-status') . '</strong> ' . (isset($plugin_data->version) ? $plugin_data->version : __('Unknown', 'plugginsight-maintenance-status')) . '<br>';
-            echo '<strong>' . __('Last Updated:', 'plugginsight-maintenance-status') . '</strong> ' . plugin_maintenance_status_format_last_updated_pmswp(isset($plugin_data->last_updated) ? $plugin_data->last_updated : '') . '<br>'; // Updated function name
-            echo '<strong>' . __('Tested Up to:', 'plugginsight-maintenance-status') . '</strong> ' . (isset($plugin_data->tested) ? $plugin_data->tested : __('Unknown', 'plugginsight-maintenance-status')) . '<br>';
-            echo generate_status_bar_pmswp(isset($plugin_data->tested) ? $plugin_data->tested : ''); // Updated function name
-			$review_link = 'https://wordpress.org/plugins/' . $plugin_data->slug . '/#reviews';
-			$changelog_link = 'https://wordpress.org/plugins/' . $plugin_data->slug . '/#developers';
-			echo '<strong><a href="' . $review_link . '"target="_blank">' . __('Reviews', 'plugginsight-maintenance-status') . '</a> | <a href="https://wordpress.org/support/plugin/' . $plugin_slug . '/" target="_blank">' . __('Support', 'plugginsight-maintenance-status') . '</a> | <a href="' . $changelog_link . '"target="_blank">' . __('Changelog', 'plugginsight-maintenance-status') . '</a></strong>';
+			
+			
+            /* Display additional information from the plugin repository API */
+            echo '<strong>' . esc_html(__('Latest Version:', 'plugginsight-maintenance-status')) . '</strong> ' . 
+    (isset($plugin_data->version) ? esc_html($plugin_data->version) : esc_html(__('Unknown', 'plugginsight-maintenance-status'))) . '<br>';
+
+            echo '<strong>' . esc_html(__('Last Updated:', 'plugginsight-maintenance-status')) . '</strong> ' . 
+    esc_html(plugginsight_maintenance_status_format_last_updated_pmswp(isset($plugin_data->last_updated) ? $plugin_data->last_updated : __('Unknown', 'plugginsight-maintenance-status'))) . '<br>';
+
+            echo '<strong>' . esc_html(__('Tested Up to:', 'plugginsight-maintenance-status')) . '</strong> ' . 
+    (isset($plugin_data->tested) ? esc_html($plugin_data->tested) : esc_html(__('Unknown', 'plugginsight-maintenance-status'))) . '<br>';
+
+            echo wp_kses_post(plugginsight_generate_status_bar_pmswp(isset($plugin_data->tested) ? $plugin_data->tested : ''));
+
+			
         } else {
-            echo __('Plugin not available in the repository', 'plugginsight-maintenance-status');
+            echo esc_html( __('Plugin not available in the repository', 'plugginsight-maintenance-status') );
         }
     }
 }
@@ -248,8 +276,8 @@ function populate_maintenance_status_column_pmswp($column, $plugin_file, $plugin
 
 
 
-function plugin_maintenance_status_get_plugin_data_pmswp($plugin_name) {
-    $cached_data = get_transient('plugin_maintenance_status_' . $plugin_name);
+function plugginsight_maintenance_status_get_plugin_data_pmswp($plugin_name) {
+    $cached_data = get_transient('plugginsight_maintenance_status_' . $plugin_name);
     if ($cached_data !== false) {
         return $cached_data;
     }
@@ -265,7 +293,7 @@ function plugin_maintenance_status_get_plugin_data_pmswp($plugin_name) {
 
     if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200) {
         $data = json_decode(wp_remote_retrieve_body($response));
-        set_transient('plugin_maintenance_status_' . $plugin_name, $data, 86400);
+        set_transient('plugginsight_maintenance_status_' . $plugin_name, $data, 86400);
         return $data;
     }
 
@@ -282,10 +310,31 @@ function plugginsight_maintenance_status_load_textdomain() {
 
 
 
-add_action('admin_head', 'customize_column_width_and_alignment_pmswp');
-function customize_column_width_and_alignment_pmswp() {
-    echo '<style>
-        .column-maintenance_status_column { width: 18%; }
-        .column-maintenance_status_column strong { display: inline-block; min-width: 70px; }
-    </style>';
+/* Uninstall hook to delete language files, only when the plugin is deleted */
+register_uninstall_hook(__FILE__, 'plugginsight_maintenance_status_uninstall_pmswp');
+
+function plugginsight_maintenance_status_uninstall_pmswp() {
+    global $plugginsight_wp_filesystem;
+
+    if (empty($plugginsight_wp_filesystem)) {
+        WP_Filesystem();
+    }
+
+    /*Check if filesystem was initialized properly */
+    if (!is_object($plugginsight_wp_filesystem)) {
+        return;
+    }
+
+    $plugginsight_language_folder = plugin_dir_path(__FILE__) . 'languages/';
+    if ($plugginsight_wp_filesystem->is_dir($plugginsight_language_folder)) {
+        $plugginsight_language_files = $plugginsight_wp_filesystem->dirlist($plugginsight_language_folder);
+        foreach ($plugginsight_language_files as $file) {
+            if ($file['type'] !== 'dir') {
+                wp_delete_file($plugginsight_language_folder . $file['name']);
+            }
+        }
+        /* Remove the folder */
+        $plugginsight_wp_filesystem->rmdir($plugginsight_language_folder);
+    }
 }
+
