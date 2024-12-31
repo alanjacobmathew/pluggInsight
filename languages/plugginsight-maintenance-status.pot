@@ -1,121 +1,84 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PluggInsight - Maintenance Status\n"
-"POT-Creation-Date: 2023-06-12 11:44+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Project-Id-Version: \n"
+"POT-Creation-Date: 2024-12-31 14:57+0530\n"
+"PO-Revision-Date: 2024-12-31 14:48+0530\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: \n"
+"Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
-"X-Generator: Loco https://localise.biz/\n"
-"X-Poedit-Basepath: .\n"
+"X-Generator: Poedit 3.5\n"
+"X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e\n"
-"X-Poedit-SearchPath-0: plugginsight-maintenance-status.php\n"
+"X-Poedit-SearchPath-0: .\n"
 
-#. Author of the plugin
-msgid "Alan Jacob Mathew"
-msgstr ""
-
-#: plugginsight-maintenance-status.php:106
-msgid "Cache cleared and refreshed successfully."
-msgstr ""
-
-#: plugginsight-maintenance-status.php:240
-msgid "Changelog"
-msgstr ""
-
-#: plugginsight-maintenance-status.php:86
-msgid "Clear Status Cache"
-msgstr ""
-
-#: plugginsight-maintenance-status.php:80
-msgid "Disclaimer:"
-msgstr ""
-
-#. Description of the plugin
-msgid ""
-"Easily access maintenance details for each plugin directly on the WordPress "
-"plugin page."
-msgstr ""
-
-#. Author URI of the plugin
-msgid "https://profiles.wordpress.org/alanjacobmathew/"
-msgstr ""
-
-#: plugginsight-maintenance-status.php:109
-msgid "Invalid security token. Cache clearing and refreshing failed."
-msgstr ""
-
-#: plugginsight-maintenance-status.php:235
-msgid "Last Updated:"
-msgstr ""
-
-#: plugginsight-maintenance-status.php:234
-msgid "Latest Version:"
-msgstr ""
-
-#: plugginsight-maintenance-status.php:61 
-#: plugginsight-maintenance-status.php:62 
+#: plugginsight-maintenance-status.php:52
+#: plugginsight-maintenance-status.php:53
 #: plugginsight-maintenance-status.php:144
 msgid "Maintenance Status"
 msgstr ""
 
-#: plugginsight-maintenance-status.php:78
+#: plugginsight-maintenance-status.php:69
 msgid "Maintenance Status Settings"
 msgstr ""
 
-#: plugginsight-maintenance-status.php:79
+#: plugginsight-maintenance-status.php:70
 msgid "Manage Maintenance Status Cache"
 msgstr ""
 
-#. Name of the plugin
-msgid "PluggInsight - Maintenance Status"
+#: plugginsight-maintenance-status.php:71
+msgid "Disclaimer:"
 msgstr ""
 
-#: plugginsight-maintenance-status.php:242
-msgid "Plugin not available in the repository"
+#: plugginsight-maintenance-status.php:71
+msgid "The plugin and its developer do not independently verify the accuracy or validity of each plugin's data. The data displayed is obtained from the WP plugin repository, where individual plugin authors have tested and reported that their plugins are compatible with the latest WordPress versions. All the displayed logic in this plugin is based on that data."
 msgstr ""
 
-#: plugginsight-maintenance-status.php:240
-msgid "Reviews"
+#: plugginsight-maintenance-status.php:72
+msgid "The below process will depend on the number of plugins you have installed. More plugins installed, more time it will take to reload this cache."
+msgstr ""
+
+#: plugginsight-maintenance-status.php:78
+msgid "Clear Status Cache"
+msgstr ""
+
+#: plugginsight-maintenance-status.php:104
+msgid "Cache cleared and refreshed successfully."
+msgstr ""
+
+#: plugginsight-maintenance-status.php:107
+msgid "Invalid security token. Cache clearing and refreshing failed."
 msgstr ""
 
 #: plugginsight-maintenance-status.php:125
 msgid "Settings"
 msgstr ""
 
-#: plugginsight-maintenance-status.php:240
-msgid "Support"
+#: plugginsight-maintenance-status.php:146
+msgid "Update Status Cache"
 msgstr ""
 
-#: plugginsight-maintenance-status.php:236
-msgid "Tested Up to:"
+#: plugginsight-maintenance-status.php:257
+msgid "Latest Version:"
 msgstr ""
 
-#: plugginsight-maintenance-status.php:81
-msgid ""
-"The below process will depend on the number of plugins you have installed. "
-"More plugins installed, more time it will take to reload this cache."
-msgstr ""
-
-#: plugginsight-maintenance-status.php:80
-msgid ""
-"The plugin and its developer do not independently verify the accuracy or "
-"validity of each plugin's data. The data displayed is obtained from the WP "
-"plugin repository, where individual plugin authors have tested and reported "
-"that their plugins are compatible with the latest WordPress versions. All "
-"the displayed logic in this plugin is based on that data."
-msgstr ""
-
-#: plugginsight-maintenance-status.php:234 
-#: plugginsight-maintenance-status.php:236
+#: plugginsight-maintenance-status.php:258
+#: plugginsight-maintenance-status.php:261
+#: plugginsight-maintenance-status.php:264
 msgid "Unknown"
 msgstr ""
 
-#: plugginsight-maintenance-status.php:146
-msgid "Update Status Cache"
+#: plugginsight-maintenance-status.php:260
+msgid "Last Updated:"
+msgstr ""
+
+#: plugginsight-maintenance-status.php:263
+msgid "Tested Up to:"
+msgstr ""
+
+#: plugginsight-maintenance-status.php:270
+msgid "Plugin not available in the repository"
 msgstr ""

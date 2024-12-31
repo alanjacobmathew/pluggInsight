@@ -1,8 +1,11 @@
 .column-maintenance_status_column {
-    width: 20%;
+    width: 18%;
     position: relative;
 }
-
+.column-maintenance_status_column strong {
+    display: inline-block;
+    min-width: 70px;
+}
 .maintenance-status-header {
     display: inline-block;
 }
@@ -15,29 +18,29 @@
     color: #999;
 }
 
-.status-bar {
+.plugginsight_status-bar {
     height: 8px;
     margin-bottom: 5px;
     border-radius: 4px;
 }
 
-.status-bar.green {
+.plugginsight_status-bar.green {
     background-color: #00FF00;
 }
 
-.status-bar.orange {
+.plugginsight_status-bar.orange {
     background-color: #f89406;
 }
 
-.status-bar.red {
+.plugginsight_status-bar.red {
     background-color: #ee5f5b;
 }
 
-.status-bar.skyblue {
+.plugginsight_status-bar.skyblue {
     background-color: #87ceeb;
 }
 
-.clear-cache-link a .dashicons {
+.plugginsight_clear-cache-link a .dashicons {
     color: #767676 !important;
 }
 
