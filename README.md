@@ -5,8 +5,8 @@ The PluggInsight - Maintenance Status for WP plugins enhances your WordPress plu
 Further it helps the admins make informed decision before updating the site to the latest WordPress version. 
 
 ![image](https://github.com/alanjacobmathew/pluggInsight-maintenance-status/assets/33965848/042eba31-19d7-4951-a4cb-b1d7d06b8acc)
-> [!WARNING]
-> The plugin wasn't approved for the repo due to some code sanitation and validation issues that I haven't had time to address yet. So, if you're using it, please only use it on your development site.
+
+ Download from official WordPress Repo: https://wordpress.org/plugins/plugginsight-maintenance-status/
 
 
 
@@ -62,7 +62,7 @@ For plugins installed from sources other than WP repo, will show a \"Plugin not 
 Though it is doable, the fact that most commercial plugins are distributed directly from their sites, make it difficult. But if there are other repositories other than the default WP repo, it could be implemented.
 
 ### Found a bug?
-Report it on [GitHub](https://github.com/alanjacobmathew/plugginsight/issues/new) 
+Report it on [GitHub](https://github.com/alanjacobmathew/pluggInsight-maintenance-status/issues) 
 
 ### Want more Features? 
 If you have a better idea to implement this functionality of the plugin or if you would like to add more feature. Do submit a request an enhancement or better, create a pull request.
