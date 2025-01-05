@@ -132,24 +132,14 @@ function plugginsight_maintenance_status_add_plugin_page_link_pmswp($links) {
 
 add_filter('manage_plugins_columns', 'plugginsight_add_column_to_plugins_page_pmswp');
 function plugginsight_add_column_to_plugins_page_pmswp($columns) {
-    $new_columns = array();
-    $position = 0;
-    foreach ($columns as $key => $value) {
-        if ($key === 'maintenance_status_column') {
-            unset($columns[$key]);
-        } else {
-            $new_columns[$key] = $value;
-            if ($position === 3) {
-                $new_columns['maintenance_status_column'] = sprintf(
-                    esc_html( __('Maintenance Status', 'plugginsight-maintenance-status') ). ' <a href="%s" class="plugginsight_clear-cache-link" title="%s"><span class="dashicons dashicons-plugins-checked"></span><a>',
-                    esc_url(admin_url('admin.php?page=plugginsight-maintenance-status')),
-                    esc_html( __('Update Status Cache', 'plugginsight-maintenance-status') )
-                );
-            }
-            $position++;
-        }
-    }
-    return $new_columns;
+    
+    $columns['maintenance_status_column'] = sprintf(
+        esc_html(__('Maintenance Status', 'plugginsight-maintenance-status')) . ' <a href="%s" class="plugginsight_clear-cache-link" title="%s"><span class="dashicons dashicons-plugins-checked"></span></a>',
+        esc_url(admin_url('admin.php?page=plugginsight-maintenance-status')),
+        esc_html(__('Update Status Cache', 'plugginsight-maintenance-status'))
+    );
+
+    return $columns;
 }
 
 
