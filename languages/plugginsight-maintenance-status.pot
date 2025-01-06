@@ -2,7 +2,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-12-31 14:57+0530\n"
+"POT-Creation-Date: 2025-01-06 13:29+0530\n"
 "PO-Revision-Date: 2024-12-31 14:48+0530\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -17,7 +17,7 @@ msgstr ""
 
 #: plugginsight-maintenance-status.php:52
 #: plugginsight-maintenance-status.php:53
-#: plugginsight-maintenance-status.php:144
+#: plugginsight-maintenance-status.php:137
 msgid "Maintenance Status"
 msgstr ""
 
@@ -57,28 +57,58 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: plugginsight-maintenance-status.php:146
+#: plugginsight-maintenance-status.php:139
 msgid "Update Status Cache"
 msgstr ""
 
-#: plugginsight-maintenance-status.php:257
+#: plugginsight-maintenance-status.php:246
+msgid "Plugin Removed from WP"
+msgstr ""
+
+#: plugginsight-maintenance-status.php:247
+msgid "Date:"
+msgstr ""
+
+#: plugginsight-maintenance-status.php:248
+msgid "Reason:"
+msgstr ""
+
+#: plugginsight-maintenance-status.php:253
 msgid "Latest Version:"
 msgstr ""
 
-#: plugginsight-maintenance-status.php:258
-#: plugginsight-maintenance-status.php:261
-#: plugginsight-maintenance-status.php:264
-msgid "Unknown"
-msgstr ""
-
-#: plugginsight-maintenance-status.php:260
+#: plugginsight-maintenance-status.php:254
 msgid "Last Updated:"
 msgstr ""
 
-#: plugginsight-maintenance-status.php:263
+#: plugginsight-maintenance-status.php:255
 msgid "Tested Up to:"
 msgstr ""
 
-#: plugginsight-maintenance-status.php:270
+#: plugginsight-maintenance-status.php:259
 msgid "Plugin not available in the repository"
+msgstr ""
+
+#: plugginsight-maintenance-status.php:291
+msgid "No name specified"
+msgstr ""
+
+#: plugginsight-maintenance-status.php:292
+msgid "No slug specified"
+msgstr ""
+
+#: plugginsight-maintenance-status.php:293
+msgid "No version specified"
+msgstr ""
+
+#: plugginsight-maintenance-status.php:294
+msgid "No last updated date specified"
+msgstr ""
+
+#: plugginsight-maintenance-status.php:295
+msgid "No tested version specified"
+msgstr ""
+
+#: plugginsight-maintenance-status.php:305
+msgid "No reason specified"
 msgstr ""
