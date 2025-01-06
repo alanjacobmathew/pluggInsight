@@ -239,25 +239,24 @@ function plugginsight_populate_maintenance_status_column_pmswp($column, $plugin_
     if ($column === 'maintenance_status_column') {
         $plugin_slug = basename(dirname($plugin_file));
         $plugin_data = plugginsight_maintenance_status_get_plugin_data_pmswp($plugin_slug); 
-		
+    
         if ($plugin_data !== null) {
-			
-			
-            /* Display additional information from the plugin repository API */
-            echo '<strong>' . esc_html(__('Latest Version:', 'plugginsight-maintenance-status')) . '</strong> ' . 
-    (isset($plugin_data->version) ? esc_html($plugin_data->version) : esc_html(__('Unknown', 'plugginsight-maintenance-status'))) . '<br>';
-
-            echo '<strong>' . esc_html(__('Last Updated:', 'plugginsight-maintenance-status')) . '</strong> ' . 
-    esc_html(plugginsight_maintenance_status_format_last_updated_pmswp(isset($plugin_data->last_updated) ? $plugin_data->last_updated : __('Unknown', 'plugginsight-maintenance-status'))) . '<br>';
-
-            echo '<strong>' . esc_html(__('Tested Up to:', 'plugginsight-maintenance-status')) . '</strong> ' . 
-    (isset($plugin_data->tested) ? esc_html($plugin_data->tested) : esc_html(__('Unknown', 'plugginsight-maintenance-status'))) . '<br>';
-
-            echo wp_kses_post(plugginsight_generate_status_bar_pmswp(isset($plugin_data->tested) ? $plugin_data->tested : ''));
-
-			
+            if (isset($plugin_data->removed) && $plugin_data->removed === true) {
+				// When plugin is removed from repo, either because of author request, or for guideline violation.
+				echo '<strong>' . esc_html(__('Plugin Removed from WP', 'plugginsight-maintenance-status')) . '</strong><br>';
+				echo '<strong>' . esc_html(__('Date:', 'plugginsight-maintenance-status')) . '</strong> ' . esc_html($plugin_data->closed_date) . '<br>';
+				echo '<strong>' . esc_html(__('Reason:', 'plugginsight-maintenance-status')) . '</strong> ' . esc_html($plugin_data->reason_text) . '<br>';
+				$status_color = 'plugginsight_status-bar removed';
+				echo '<div class="' . esc_attr($status_color) . '"></div>';
+			} else {
+                // Display available plugin information
+                echo '<strong>' . esc_html(__('Latest Version:', 'plugginsight-maintenance-status')) . '</strong> ' .esc_html($plugin_data->version) . '<br>';
+				echo '<strong>' . esc_html(__('Last Updated:', 'plugginsight-maintenance-status')) . '</strong> ' .esc_html(plugginsight_maintenance_status_format_last_updated_pmswp($plugin_data->last_updated)) . '<br>';
+				echo '<strong>' . esc_html(__('Tested Up to:', 'plugginsight-maintenance-status')) . '</strong> ' .esc_html($plugin_data->tested) . '<br>';
+				echo wp_kses_post(plugginsight_generate_status_bar_pmswp($plugin_data->tested));
+			}
         } else {
-            echo esc_html( __('Plugin not available in the repository', 'plugginsight-maintenance-status') );
+            echo esc_html(__('Plugin not available in the repository', 'plugginsight-maintenance-status'));
         }
     }
 }
@@ -281,10 +280,32 @@ function plugginsight_maintenance_status_get_plugin_data_pmswp($plugin_name) {
     $api_url = esc_url_raw(sprintf('https://api.wordpress.org/plugins/info/1.0/%s.json', $plugin_slug));
     $response = wp_remote_get($api_url);
 
-    if (!is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200) {
+    if (!is_wp_error($response)) {
+        $response_code = wp_remote_retrieve_response_code($response);
+        if ($response_code === 200) {
+        // When Plugin found, return data
         $data = json_decode(wp_remote_retrieve_body($response));
-        set_transient('plugginsight_maintenance_status_' . $plugin_name, $data, 86400);
-        return $data;
+		// New object to store only the necessary data, saves cache storage.
+        $required_data = new stdClass();
+		// Extract only the required fields and provide default values if missing
+        $required_data->name = isset($data->name) ? $data->name : __('No name specified', 'plugginsight-maintenance-status');
+        $required_data->slug = isset($data->slug) ? $data->slug : __('No slug specified', 'plugginsight-maintenance-status');
+        $required_data->version = isset($data->version) ? $data->version : __('No version specified', 'plugginsight-maintenance-status');
+        $required_data->last_updated = isset($data->last_updated) ? $data->last_updated : __('No last updated date specified', 'plugginsight-maintenance-status');
+        $required_data->tested = isset($data->tested) ? $data->tested : __('No tested version specified', 'plugginsight-maintenance-status');
+		// Set transient for caching the required data
+        set_transient('plugginsight_maintenance_status_' . $plugin_name, $required_data, 86400);
+        return $required_data;
+        } elseif ($response_code === 404) {
+            // If Plugin removed or closed. Could be by author request or for guideline violation.
+            $data = json_decode(wp_remote_retrieve_body($response));
+            if (isset($data->error) && $data->error === 'closed') {
+                
+                $data->removed = true;
+                $data->reason_text = isset($data->reason_text) ? $data->reason_text : __('No reason specified', 'plugginsight-maintenance-status');
+                return $data;
+            }
+        }
     }
 
     return null;
