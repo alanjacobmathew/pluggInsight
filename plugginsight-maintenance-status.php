@@ -2,7 +2,7 @@
 /**
  * Plugin Name: PluggInsight - Maintenance Status
  * Description: Easily access maintenance details for each plugin directly on the WordPress plugin page.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Alan Jacob Mathew
  * Author URI: https://profiles.wordpress.org/alanjacobmathew/
  * Tested up to: 6.7.1
