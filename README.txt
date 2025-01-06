@@ -35,7 +35,7 @@ Further it helps the admins make informed decision before updating the site to t
 - Data is sourced from official WordPress Plugin Repository. The plugin author has not individually verified the accuracy or validity of each plugin data.
 - The plugin is designed keeping mind of those plugins that provides minimal functionality, that need not be updated but tested up to the latest version.
 - The plugin uses Tested Up to Data to display this status bar. 
-- A plugin removed from repo, but still maintained from thier repo, will be only shown as plugin removed.
+- A plugin removed from WP repo, but still maintained from their private repo, will be only shown as plugin removed.
 - The plugin checks for the latest major WP release and compare it with the major release mention in the tested up to data. The below color codes show how they are calculated
 
 
